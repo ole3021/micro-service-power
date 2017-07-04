@@ -1,0 +1,53 @@
+version: '3'
+services:
+  kong-database:
+    image: postgres:9.4
+    container_name: kong-postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_DB=kong
+  
+  # Kong
+  kong:
+    image: kong
+    container_name: kong-gateway
+    restart: always
+    links:
+      - kong-database
+    ports:
+      - 8000:8000
+      - 8443:8443
+      - 8001:8001
+    expose:
+      - 7946
+      - 7946/udp
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-database
+
+# TOFIX:
+# example_kong exited with code 1
+# example_postgres | CREATE DATABASE
+# example_postgres |
+# example_postgres | CREATE ROLE
+# example_postgres |
+# example_postgres |
+# example_postgres | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+# example_postgres |
+# example_postgres | LOG:  received fast shutdown request
+# example_postgres | LOG:  aborting any active transactions
+# example_postgres | LOG:  autovacuum launcher shutting down
+# example_postgres | waiting for server to shut down....LOG:  shutting down
+# example_postgres | LOG:  database system is shut down
+# example_kong | Error: /usr/local/share/lua/5.1/kong/cmd/start.lua:18: [postgres error] connection refused
+# example_kong |
+# example_kong |   Run with --v (verbose) or --vv (debug) for more details
+# example_kong | Error: /usr/local/share/lua/5.1/kong/cmd/start.lua:18: [postgres error] connection refused
+# example_kong |
+# example_kong |   Run with --v (verbose) or --vv (debug) for more details
+# example_kong | Error: /usr/local/share/lua/5.1/kong/cmd/start.lua:18: [postgres error] connection refused
+# example_kong |
+# example_kong |   Run with --v (verbose) or --vv (debug) for more details
