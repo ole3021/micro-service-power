@@ -1,0 +1,14 @@
+version: '3'
+services:
+  hello:
+    build: ./server
+    container_name: hello-server
+    ports:
+      - '8080:8080'
+    networks:
+      bridge-kong:
+
+networks:
+  bridge-kong:
+    external:
+      name: micro-kong
